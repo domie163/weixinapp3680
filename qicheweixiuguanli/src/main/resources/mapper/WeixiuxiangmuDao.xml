@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.WeixiuxiangmuDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.weixiuxiangmu_name as weixiuxiangmuName
+        ,a.weixiuxiangmu_photo as weixiuxiangmuPhoto
+        ,a.weixiuxiangmu_types as weixiuxiangmuTypes
+        ,a.weixiuxiangmu_new_money as weixiuxiangmuNewMoney
+        ,a.weixiuxiangmu_clicknum as weixiuxiangmuClicknum
+        ,a.weixiuxiangmu_content as weixiuxiangmuContent
+        ,a.shangxia_types as shangxiaTypes
+        ,a.weixiuxiangmu_delete as weixiuxiangmuDelete
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.WeixiuxiangmuView" >
+        SELECT
+        <include refid="Base_Column_List" />
+
+--         级联表的字段
+
+        FROM weixiuxiangmu  a
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.weixiuxiangmuName != '' and params.weixiuxiangmuName != null and params.weixiuxiangmuName != 'null' ">
+                and a.weixiuxiangmu_name like CONCAT('%',#{params.weixiuxiangmuName},'%')
+            </if>
+            <if test="params.weixiuxiangmuTypes != null and params.weixiuxiangmuTypes != ''">
+                and a.weixiuxiangmu_types = #{params.weixiuxiangmuTypes}
+            </if>
+            <if test="params.weixiuxiangmuNewMoneyStart != null ">
+                <![CDATA[  and a.weixiuxiangmu_new_money >= #{params.weixiuxiangmuNewMoneyStart}   ]]>
+            </if>
+            <if test="params.weixiuxiangmuNewMoneyEnd != null ">
+                <![CDATA[  and a.weixiuxiangmu_new_money <= #{params.weixiuxiangmuNewMoneyEnd}   ]]>
+            </if>
+            <if test="params.weixiuxiangmuClicknumStart != null and params.weixiuxiangmuClicknumStart != ''">
+                <![CDATA[  and a.weixiuxiangmu_clicknum >= #{params.weixiuxiangmuClicknumStart}   ]]>
+            </if>
+            <if test="params.weixiuxiangmuClicknumEnd != null and params.weixiuxiangmuClicknumEnd != ''">
+                <![CDATA[  and a.weixiuxiangmu_clicknum <= #{params.weixiuxiangmuClicknumEnd}   ]]>
+            </if>
+             <if test="params.weixiuxiangmuClicknum != null and params.weixiuxiangmuClicknum != ''">
+                and a.weixiuxiangmu_clicknum = #{params.weixiuxiangmuClicknum}
+             </if>
+            <if test=" params.weixiuxiangmuContent != '' and params.weixiuxiangmuContent != null and params.weixiuxiangmuContent != 'null' ">
+                and a.weixiuxiangmu_content like CONCAT('%',#{params.weixiuxiangmuContent},'%')
+            </if>
+            <if test="params.shangxiaTypes != null and params.shangxiaTypes != ''">
+                and a.shangxia_types = #{params.shangxiaTypes}
+            </if>
+            <if test="params.weixiuxiangmuDeleteStart != null and params.weixiuxiangmuDeleteStart != ''">
+                <![CDATA[  and a.weixiuxiangmu_delete >= #{params.weixiuxiangmuDeleteStart}   ]]>
+            </if>
+            <if test="params.weixiuxiangmuDeleteEnd != null and params.weixiuxiangmuDeleteEnd != ''">
+                <![CDATA[  and a.weixiuxiangmu_delete <= #{params.weixiuxiangmuDeleteEnd}   ]]>
+            </if>
+             <if test="params.weixiuxiangmuDelete != null and params.weixiuxiangmuDelete != ''">
+                and a.weixiuxiangmu_delete = #{params.weixiuxiangmuDelete}
+             </if>
+
+        </where>
+
+        order by a.${params.orderBy} desc 
+    </select>
+
+</mapper>
